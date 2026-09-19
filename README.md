@@ -1,20 +1,19 @@
 # Gun RNG
 
-A simple browser-based random weapon generator.
-
-## Open it locally
-
-1. Download or clone the repository.
-2. Open `index.html` in a browser.
-3. Press **Generate Weapon**.
+A browser-based random weapon loot generator with rarity, build stats, perks, power levels, and collection history.
 
 ## Features
 
-- Random weapon name
-- Random rarity system
-- Damage, fire rate, ammo, accuracy, crit chance, recoil
-- Special effect text
+- Six weapon classes: Rifle, SMG, Shotgun, Sniper, Pistol, and Heavy
+- Six rarity tiers: Common, Uncommon, Rare, Epic, Legendary, and Mythic
+- Lucky and Legendary-only drop modes
+- Adjustable power level from 1–100
+- Damage, DPS, fire rate, magazine, accuracy, critical chance, reload, and recoil
+- Random weapon perks and seeds
+- Copy a generated build to your clipboard
+- Recent-drop history saved in your browser with localStorage
+- Responsive dark UI that works on desktop and mobile
 
-## GitHub Pages
+## Run it
 
-If you want to publish it on GitHub Pages, enable Pages in the repository settings and select the root folder.
+Open `index.html` directly in a browser, or enable GitHub Pages from **Settings → Pages** and deploy the `main` branch from the root folder.

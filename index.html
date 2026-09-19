@@ -1,305 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gun RNG</title>
-    <style>
-      :root {
-        --bg: #0d1117;
-        --panel: #161b22;
-        --panel-2: #1f2937;
-        --accent: #58a6ff;
-        --good: #3fb950;
-        --warn: #f85149;
-        --text: #e6edf3;
-        --muted: #8b949e;
-      }
-
-      * { box-sizing: border-box; }
-
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #0d1117, #111827);
-        color: var(--text);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .container {
-        width: min(900px, 92vw);
-        background: rgba(22, 27, 34, 0.9);
-        border: 1px solid #30363d;
-        border-radius: 18px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.35);
-        padding: 28px;
-      }
-
-      h1 {
-        margin: 0 0 8px;
-        font-size: clamp(2rem, 4vw, 3rem);
-      }
-
-      .subtitle {
-        color: var(--muted);
-        margin-bottom: 24px;
-      }
-
-      .controls {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-      }
-
-      button {
-        border: none;
-        border-radius: 10px;
-        padding: 12px 18px;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.15s ease, opacity 0.2s ease;
-      }
-
-      button:hover { transform: translateY(-1px); }
-      button:active { transform: translateY(0); }
-
-      .primary {
-        background: var(--accent);
-        color: #081018;
-      }
-
-      .secondary {
-        background: #21262d;
-        color: var(--text);
-        border: 1px solid #30363d;
-      }
-
-      .weapon-card {
-        background: linear-gradient(180deg, rgba(31,41,55,0.9), rgba(17,24,39,0.9));
-        border: 1px solid #30363d;
-        border-radius: 16px;
-        padding: 24px;
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 18px;
-        flex-wrap: wrap;
-      }
-
-      .rarity {
-        display: inline-block;
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: bold;
-      }
-
-      .common { background: rgba(148, 163, 184, 0.2); color: #dbeafe; }
-      .uncommon { background: rgba(34,197,94,0.18); color: #bbf7d0; }
-      .rare { background: rgba(59,130,246,0.18); color: #bfdbfe; }
-      .epic { background: rgba(168,85,247,0.18); color: #e9d5ff; }
-      .legendary { background: rgba(251,191,36,0.18); color: #fde68a; }
-
-      .name {
-        font-size: clamp(1.6rem, 3vw, 2.5rem);
-        margin: 0;
-      }
-
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 16px;
-        margin-top: 18px;
-      }
-
-      .stat {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid #30363d;
-        border-radius: 12px;
-        padding: 14px 16px;
-      }
-
-      .label {
-        color: var(--muted);
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .value {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-top: 8px;
-      }
-
-      .footer {
-        margin-top: 18px;
-        color: var(--muted);
-        font-size: 0.94rem;
-      }
-
-      .red { color: var(--warn); }
-      .green { color: var(--good); }
-      .blue { color: var(--accent); }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Gun RNG</h1>
-      <div class="subtitle">Generate a random weapon loadout for your next run.</div>
-
-      <div class="controls">
-        <button class="primary" id="generateBtn">Generate Weapon</button>
-        <button class="secondary" id="rerollBtn">Reroll Stats</button>
-      </div>
-
-      <div class="weapon-card">
-        <div class="header">
-          <h2 class="name" id="weaponName">Loading...</h2>
-          <span class="rarity common" id="weaponRarity">Common</span>
-        </div>
-
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gun RNG — Arsenal Generator</title>
+  <style>
+    :root{--bg:#090d14;--panel:#121a26;--panel2:#182334;--line:#2a3a50;--text:#edf4ff;--muted:#91a4bd;--accent:#58a6ff;--green:#45d483;--gold:#f7c948;--danger:#ff6b7a}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#172b4a 0,#090d14 42%),var(--bg)}
+    .app{width:min(1100px,94vw);margin:32px auto}.top{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}h1{font-size:clamp(2rem,5vw,3.5rem);margin:0;letter-spacing:-.06em}.subtitle{color:var(--muted);margin-top:6px}.badge{border:1px solid var(--line);background:#111d2d;color:var(--accent);border-radius:999px;padding:8px 12px;font-size:.78rem;font-weight:700}
+    .toolbar,.grid{display:grid;gap:14px}.toolbar{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:rgba(18,26,38,.9);border:1px solid var(--line);padding:16px;border-radius:16px;margin-bottom:16px}.field label{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}.field select,.field input{width:100%;background:#0c1420;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;font:inherit}
+    .buttons{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.button{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;color:var(--text);background:#202f43;transition:.15s}.button:hover{transform:translateY(-2px);filter:brightness(1.15)}.primary{background:var(--accent);color:#06111f}.gold{background:#5b4610;color:#ffe08a}.danger{background:#44202a}.full{width:100%}
+    .main{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:16px}.card,.side{background:linear-gradient(145deg,rgba(24,35,52,.97),rgba(13,20,31,.97));border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 16px 40px #0003}.card{position:relative;overflow:hidden}.card:after{content:'⚙';position:absolute;right:24px;top:18px;font-size:5rem;opacity:.035}.heading{display:flex;justify-content:space-between;gap:12px;align-items:start;position:relative;z-index:1}.weapon-name{font-size:clamp(1.8rem,4vw,3rem);margin:0 0 5px;letter-spacing:-.04em}.type{color:var(--muted)}.rarity{border-radius:999px;padding:8px 12px;font-size:.75rem;text-transform:uppercase;font-weight:900;letter-spacing:.08em}.common{background:#44505d;color:#e4edf7}.uncommon{background:#174d37;color:#8ef0bd}.rare{background:#153c70;color:#8ac4ff}.epic{background:#51227b;color:#e2b5ff}.legendary{background:#62470b;color:#ffe083}.mythic{background:#6d1d42;color:#ffacd0}
+    .level{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem;margin:20px 0 2px}.bar{height:8px;background:#0a1018;border-radius:99px;overflow:hidden;flex:1}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:inherit}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:18px}.stat{border:1px solid var(--line);background:#ffffff05;border-radius:12px;padding:14px}.label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}.value{font-size:1.4rem;font-weight:850;margin-top:7px}.blue{color:var(--accent)}.green{color:var(--green)}.gold-text{color:var(--gold)}.danger-text{color:var(--danger)}.perk{margin-top:18px;padding:14px;border-left:3px solid var(--gold);background:#f7c9480d;color:#f4d681}.perk strong{display:block;color:var(--gold);margin-bottom:4px}.side h2{font-size:1.05rem;margin:0 0 14px}.history{display:flex;flex-direction:column;gap:8px;max-height:310px;overflow:auto}.history-item{display:flex;justify-content:space-between;gap:8px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:10px;background:#ffffff03;cursor:pointer}.history-item:hover{background:#ffffff0a}.history-item small{display:block;color:var(--muted);margin-top:3px}.history-item strong{font-size:.9rem}.history-rarity{font-size:.68rem;font-weight:800;color:var(--gold)}.empty{color:var(--muted);font-size:.9rem}.bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:14px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#e6f0ff;color:#08111d;padding:11px 15px;border-radius:9px;font-weight:700;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:760px){.main{grid-template-columns:1fr}.app{margin:20px auto}.card,.side{padding:17px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top"><div><h1>Gun RNG</h1><div class="subtitle">Build an absurdly random arsenal.</div></div><div class="badge">v2.0 • LOOT LAB</div></header>
+    <section class="toolbar">
+      <div class="field"><label for="category">Weapon class</label><select id="category"><option>Any class</option><option>Rifle</option><option>SMG</option><option>Shotgun</option><option>Sniper</option><option>Pistol</option><option>Heavy</option></select></div>
+      <div class="field"><label for="rarityFilter">Rarity luck</label><select id="rarityFilter"><option>Normal</option><option>Lucky</option><option>Legendary only</option></select></div>
+      <div class="field"><label for="level">Power level</label><input id="level" type="number" min="1" max="100" value="50" /></div>
+      <div class="buttons"><button class="button primary" id="generateBtn">⚡ Generate</button><button class="button gold" id="copyBtn">Copy build</button></div>
+    </section>
+    <section class="main">
+      <article class="card">
+        <div class="heading"><div><h2 class="weapon-name" id="weaponName">Loading...</h2><div class="type" id="weaponType">Scanning the armory...</div></div><span class="rarity common" id="weaponRarity">Common</span></div>
+        <div class="level"><span id="levelText">Level 50</span><div class="bar"><span id="levelBar" style="width:50%"></span></div></div>
         <div class="stats">
-          <div class="stat">
-            <div class="label">Damage</div>
-            <div class="value blue" id="damage">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Fire Rate</div>
-            <div class="value" id="fireRate">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Magazine</div>
-            <div class="value" id="magazine">0</div>
-          </div>
-          <div class="stat">
-            <div class="label">Accuracy</div>
-            <div class="value green" id="accuracy">0%</div>
-          </div>
-          <div class="stat">
-            <div class="label">Crit Chance</div>
-            <div class="value" id="critChance">0%</div>
-          </div>
-          <div class="stat">
-            <div class="label">Recoil</div>
-            <div class="value red" id="recoil">0</div>
-          </div>
+          <div class="stat"><div class="label">Damage</div><div class="value blue" id="damage">0</div></div><div class="stat"><div class="label">DPS</div><div class="value gold-text" id="dps">0</div></div><div class="stat"><div class="label">Fire rate</div><div class="value" id="fireRate">0/s</div></div><div class="stat"><div class="label">Magazine</div><div class="value" id="magazine">0</div></div><div class="stat"><div class="label">Accuracy</div><div class="value green" id="accuracy">0%</div></div><div class="stat"><div class="label">Critical</div><div class="value" id="critChance">0%</div></div><div class="stat"><div class="label">Reload</div><div class="value" id="reload">0s</div></div><div class="stat"><div class="label">Recoil</div><div class="value danger-text" id="recoil">0</div></div>
         </div>
-
-        <div class="footer" id="specialText">
-          A common weapon with no special effect.
-        </div>
-      </div>
-    </div>
-
-    <script>
-      const weaponTypes = [
-        'Ravager', 'Viper', 'Mercury', 'Frostbite', 'Ashfall', 'Nova',
-        'Dread', 'Iron Fang', 'Sky Breaker', 'Nightwatch', 'Horizon', 'Rupture',
-        'Calamity', 'Inferno', 'Echo', 'Gale', 'Titan', 'Widow', 'Cinder', 'Mantis'
-      ];
-
-      const rarities = [
-        { name: 'Common', weight: 45, className: 'common' },
-        { name: 'Uncommon', weight: 26, className: 'uncommon' },
-        { name: 'Rare', weight: 17, className: 'rare' },
-        { name: 'Epic', weight: 9, className: 'epic' },
-        { name: 'Legendary', weight: 3, className: 'legendary' }
-      ];
-
-      const specials = [
-        'Explosive rounds that burst on impact.',
-        'High-velocity bullets with extra punch.',
-        'Silent firing and precise aim.',
-        'Adds a chance to ignite enemies.',
-        'Heavy recoil, huge impact.',
-        'Critical hits deal bonus damage.',
-        'Shots pierce through targets.',
-        'A weapon with unstable but powerful energy.',
-        'Built for high precision under pressure.',
-        'Chance to chain lightning on hit.'
-      ];
-
-      function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-
-      function weightedRarity() {
-        const total = rarities.reduce((sum, r) => sum + r.weight, 0);
-        let roll = Math.random() * total;
-
-        for (const rarity of rarities) {
-          roll -= rarity.weight;
-          if (roll <= 0) return rarity;
-        }
-
-        return rarities[0];
-      }
-
-      function generateWeapon() {
-        const rarity = weightedRarity();
-        const type = weaponTypes[randomInt(0, weaponTypes.length - 1)];
-        const damage = randomInt(
-          rarity.name === 'Common' ? 12 : rarity.name === 'Uncommon' ? 18 : rarity.name === 'Rare' ? 25 : rarity.name === 'Epic' ? 35 : 48,
-          rarity.name === 'Common' ? 28 : rarity.name === 'Uncommon' ? 36 : rarity.name === 'Rare' ? 48 : rarity.name === 'Epic' ? 62 : 90
-        );
-
-        const fireRate = randomInt(
-          rarity.name === 'Common' ? 3 : rarity.name === 'Uncommon' ? 4 : rarity.name === 'Rare' ? 5 : rarity.name === 'Epic' ? 6 : 7,
-          rarity.name === 'Common' ? 8 : rarity.name === 'Uncommon' ? 10 : rarity.name === 'Rare' ? 12 : rarity.name === 'Epic' ? 14 : 18
-        );
-
-        const magazine = randomInt(
-          rarity.name === 'Common' ? 8 : rarity.name === 'Uncommon' ? 12 : rarity.name === 'Rare' ? 16 : rarity.name === 'Epic' ? 20 : 24,
-          rarity.name === 'Common' ? 18 : rarity.name === 'Uncommon' ? 24 : rarity.name === 'Rare' ? 30 : rarity.name === 'Epic' ? 36 : 42
-        );
-
-        const accuracy = randomInt(
-          rarity.name === 'Common' ? 45 : rarity.name === 'Uncommon' ? 55 : rarity.name === 'Rare' ? 65 : rarity.name === 'Epic' ? 75 : 84,
-          rarity.name === 'Common' ? 72 : rarity.name === 'Uncommon' ? 80 : rarity.name === 'Rare' ? 88 : rarity.name === 'Epic' ? 94 : 99
-        );
-
-        const critChance = randomInt(
-          rarity.name === 'Common' ? 4 : rarity.name === 'Uncommon' ? 7 : rarity.name === 'Rare' ? 11 : rarity.name === 'Epic' ? 16 : 24,
-          rarity.name === 'Common' ? 12 : rarity.name === 'Uncommon' ? 18 : rarity.name === 'Rare' ? 24 : rarity.name === 'Epic' ? 30 : 40
-        );
-
-        const recoil = randomInt(
-          rarity.name === 'Common' ? 1 : rarity.name === 'Uncommon' ? 2 : rarity.name === 'Rare' ? 3 : rarity.name === 'Epic' ? 4 : 5,
-          rarity.name === 'Common' ? 5 : rarity.name === 'Uncommon' ? 7 : rarity.name === 'Rare' ? 9 : rarity.name === 'Epic' ? 12 : 16
-        );
-
-        const finalName = `${type} ${rarity.name === 'Legendary' ? 'Prime' : rarity.name === 'Epic' ? 'Elite' : rarity.name === 'Rare' ? 'Mark' : rarity.name === 'Uncommon' ? 'II' : ''}`.trim();
-        const special = specials[randomInt(0, specials.length - 1)];
-
-        document.getElementById('weaponName').textContent = finalName;
-        document.getElementById('weaponRarity').textContent = rarity.name;
-        document.getElementById('weaponRarity').className = `rarity ${rarity.className}`;
-
-        document.getElementById('damage').textContent = `${damage}`;
-        document.getElementById('fireRate').textContent = `${fireRate}/s`;
-        document.getElementById('magazine').textContent = `${magazine}`;
-        document.getElementById('accuracy').textContent = `${accuracy}%`;
-        document.getElementById('critChance').textContent = `${critChance}%`;
-        document.getElementById('recoil').textContent = `${recoil}`;
-        document.getElementById('specialText').textContent = special;
-      }
-
-      document.getElementById('generateBtn').addEventListener('click', generateWeapon);
-      document.getElementById('rerollBtn').addEventListener('click', generateWeapon);
-
-      generateWeapon();
-    </script>
-  </body>
+        <div class="perk"><strong id="perkName">Special perk</strong><span id="perkText">A random perk will appear here.</span></div>
+        <div class="bottom"><span id="seedText">Seed: —</span><span id="scoreText">Power score: —</span></div>
+      </article>
+      <aside class="side"><h2>Recent drops</h2><div class="history" id="history"><div class="empty">Generate a weapon to start your collection.</div></div><button class="button danger full" id="clearBtn" style="margin-top:14px">Clear history</button></aside>
+    </section>
+  </main>
+  <div class="toast" id="toast">Copied!</div>
+  <script>
+    const classes={Rifle:{damage:[24,42],rate:[5,9],mag:[20,35],accuracy:[68,92],recoil:[4,10]},SMG:{damage:[12,25],rate:[10,18],mag:[25,45],accuracy:[55,80],recoil:[6,14]},Shotgun:{damage:[55,100],rate:[1,3],mag:[5,12],accuracy:[35,65],recoil:[12,22]},Sniper:{damage:[80,150],rate:[.5,2],mag:[3,8],accuracy:[82,99],recoil:[10,20]},Pistol:{damage:[18,38],rate:[4,8],mag:[8,18],accuracy:[60,90],recoil:[3,9]},Heavy:{damage:[45,95],rate:[2,6],mag:[10,28],accuracy:[45,78],recoil:[14,26]}};
+    const prefixes=['Ravager','Viper','Mercury','Frostbite','Ashfall','Nova','Dread','Iron Fang','Sky Breaker','Nightwatch','Horizon','Rupture','Calamity','Inferno','Echo','Gale','Titan','Widow','Cinder','Mantis','Void','Thunder'];
+    const suffixes=['MK-II','Prime','Protocol','X','Overdrive','Requiem','Prototype','Blackout','Ultra','Zero'];
+    const perks=[['Incendiary','Shots have a chance to ignite targets.'],['Vampiric','Critical hits restore a little armor.'],['Piercing','Bullets can pass through an extra target.'],['Overclocked','Sustained fire increases fire rate.'],['Frostbite','Hits briefly slow enemies.'],['Demolitionist','Explosions deal bonus area damage.'],['Deadeye','Accuracy is improved while standing still.'],['Bottomless','A lucky reload can instantly refill the magazine.'],['Chain Reaction','Critical hits can zap a nearby enemy.'],['Glass Cannon','Huge damage, but recoil is increased.']];
+    const rarityData=[{name:'Common',weight:48,cls:'common',mult:1},{name:'Uncommon',weight:27,cls:'uncommon',mult:1.12},{name:'Rare',weight:15,cls:'rare',mult:1.27},{name:'Epic',weight:7,cls:'epic',mult:1.45},{name:'Legendary',weight:2.5,cls:'legendary',mult:1.7},{name:'Mythic',weight:.5,cls:'mythic',mult:2.1}];
+    let current=null, history=JSON.parse(localStorage.getItem('gun-rng-history')||'[]');
+    const $=id=>document.getElementById(id); const rand=(a,b)=>Math.random()*(b-a)+a; const int=(a,b)=>Math.floor(rand(a,b+1));
+    function pick(list){return list[int(0,list.length-1)]} function rarity(){let filter=$('rarityFilter').value;if(filter==='Legendary only')return Math.random()<.2?pick(rarityData.slice(4)):rarityData[4];let bonus=filter==='Lucky'?2:1;let total=rarityData.reduce((s,r)=>s+r.weight*(r.name==='Legendary'||r.name==='Mythic'?bonus:1),0),roll=Math.random()*total;for(const r of rarityData){roll-=r.weight*(r.name==='Legendary'||r.name==='Mythic'?bonus:1);if(roll<=0)return r}return rarityData[0]}
+    function generate(){let chosen=$('category').value;let type=chosen==='Any class'?pick(Object.keys(classes)):chosen;let base=classes[type],r=rarity(),lv=Math.max(1,Math.min(100,Number($('level').value)||50)),scale=1+lv/180,damage=Math.round(rand(...base.damage)*r.mult*scale),rate=Number(rand(...base.rate).toFixed(1)),mag=Math.round(rand(...base.mag)*r.mult),accuracy=Math.min(99,Math.round(rand(...base.accuracy)+lv/12)),crit=Math.min(60,Math.round(rand(4,14)+lv/5+(r.mult-1)*12)),recoil=Math.max(1,Math.round(rand(...base.recoil)/r.mult)),reload=Number(rand(1.1,3.4).toFixed(1)),dps=Math.round(damage*rate*(1+crit/100*.75)),perk=pick(perks),seed=Math.random().toString(36).slice(2,8).toUpperCase();let name=`${pick(prefixes)} ${pick(suffixes)}`;current={name,type,rarity:r.name,damage,dps,rate,mag,accuracy,crit,recoil,reload,perk:perk[0],seed,level:lv};render();history.unshift(current);history=history.slice(0,8);localStorage.setItem('gun-rng-history',JSON.stringify(history));renderHistory()}
+    function render(){let w=current,r=rarityData.find(x=>x.name===w.rarity);$('weaponName').textContent=w.name;$('weaponType').textContent=`${w.type} • ${w.rarity} drop`;$('weaponRarity').textContent=w.rarity;$('weaponRarity').className=`rarity ${r.cls}`;$('levelText').textContent=`Level ${w.level}`;$('levelBar').style.width=`${w.level}%`;$('damage').textContent=w.damage;$('dps').textContent=w.dps;$('fireRate').textContent=`${w.rate}/s`;$('magazine').textContent=w.mag;$('accuracy').textContent=`${w.accuracy}%`;$('critChance').textContent=`${w.crit}%`;$('reload').textContent=`${w.reload}s`;$('recoil').textContent=w.recoil;let p=perks.find(x=>x[0]===w.perk);$('perkName').textContent=`${w.perk} — ${p[1]}`;$('perkText').textContent=`Random seed ${w.seed}. This weapon has a power score of ${w.dps+w.accuracy+w.crit-w.recoil}.`;$('seedText').textContent=`Seed: ${w.seed}`;$('scoreText').textContent=`Power score: ${w.dps+w.accuracy+w.crit-w.recoil}`}
+    function renderHistory(){let el=$('history');if(!history.length){el.innerHTML='<div class="empty">Generate a weapon to start your collection.</div>';return}el.innerHTML=history.map((w,i)=>`<div class="history-item" data-index="${i}"><div><strong>${w.name}</strong><small>${w.type} • ${w.damage} damage • ${w.dps} DPS</small></div><span class="history-rarity">${w.rarity}</span></div>`).join('');document.querySelectorAll('.history-item').forEach(x=>x.onclick=()=>{current=history[Number(x.dataset.index)];render()})}
+    $('generateBtn').onclick=generate;$('copyBtn').onclick=()=>{if(!current)return;navigator.clipboard?.writeText(`${current.name} [${current.rarity}] — ${current.type}, ${current.damage} DMG, ${current.dps} DPS, ${current.crit}% crit, perk: ${current.perk}`).then(()=>{ $('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1400)})};$('clearBtn').onclick=()=>{history=[];localStorage.removeItem('gun-rng-history');renderHistory()};$('level').onchange=()=>{let v=Math.max(1,Math.min(100,Number($('level').value)||50));$('level').value=v};renderHistory();generate();
+  </script>
+</body>
 </html>
