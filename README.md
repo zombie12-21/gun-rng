@@ -1,19 +1,22 @@
 # Gun RNG
 
-A browser-based random weapon loot generator with rarity, build stats, perks, power levels, and collection history.
+A browser-based random weapon loot generator and player market.
 
-## Features
+## New market features
 
-- Six weapon classes: Rifle, SMG, Shotgun, Sniper, Pistol, and Heavy
-- Six rarity tiers: Common, Uncommon, Rare, Epic, Legendary, and Mythic
-- Lucky and Legendary-only drop modes
-- Adjustable power level from 1–100
-- Damage, DPS, fire rate, magazine, accuracy, critical chance, reload, and recoil
-- Random weapon perks and seeds
-- Copy a generated build to your clipboard
-- Recent-drop history saved in your browser with localStorage
-- Responsive dark UI that works on desktop and mobile
+- Every generated gun receives a calculated sale price.
+- Sell the current gun for money using **Sell gun**.
+- Start with `$500` and build your wallet by finding valuable drops.
+- Sale value is based on rarity, damage, DPS, accuracy, critical chance, level, and recoil.
+- Sold weapons are removed from recent drops.
+- Wallet and collection are saved in your browser with `localStorage`.
 
-## Run it
+## Other features
 
-Open `index.html` directly in a browser, or enable GitHub Pages from **Settings → Pages** and deploy the `main` branch from the root folder.
+- Rifle, SMG, Shotgun, Sniper, Pistol, and Heavy classes
+- Common through Mythic rarity
+- Normal, Lucky, and Legendary-only drop modes
+- Power levels, perks, seeds, DPS, power score, copy-build button
+- Responsive interface for desktop and mobile
+
+Open `index.html` directly, or enable GitHub Pages from **Settings → Pages** and deploy the `main` branch from the root folder.
