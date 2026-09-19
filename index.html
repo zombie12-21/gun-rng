@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gun RNG</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --panel-2: #1f2937;
+        --accent: #58a6ff;
+        --good: #3fb950;
+        --warn: #f85149;
+        --text: #e6edf3;
+        --muted: #8b949e;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #0d1117, #111827);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        width: min(900px, 92vw);
+        background: rgba(22, 27, 34, 0.9);
+        border: 1px solid #30363d;
+        border-radius: 18px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+        padding: 28px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+
+      .subtitle {
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.15s ease, opacity 0.2s ease;
+      }
+
+      button:hover { transform: translateY(-1px); }
+      button:active { transform: translateY(0); }
+
+      .primary {
+        background: var(--accent);
+        color: #081018;
+      }
+
+      .secondary {
+        background: #21262d;
+        color: var(--text);
+        border: 1px solid #30363d;
+      }
+
+      .weapon-card {
+        background: linear-gradient(180deg, rgba(31,41,55,0.9), rgba(17,24,39,0.9));
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        padding: 24px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+
+      .rarity {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+
+      .common { background: rgba(148, 163, 184, 0.2); color: #dbeafe; }
+      .uncommon { background: rgba(34,197,94,0.18); color: #bbf7d0; }
+      .rare { background: rgba(59,130,246,0.18); color: #bfdbfe; }
+      .epic { background: rgba(168,85,247,0.18); color: #e9d5ff; }
+      .legendary { background: rgba(251,191,36,0.18); color: #fde68a; }
+
+      .name {
+        font-size: clamp(1.6rem, 3vw, 2.5rem);
+        margin: 0;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .stat {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 14px 16px;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 8px;
+      }
+
+      .footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .red { color: var(--warn); }
+      .green { color: var(--good); }
+      .blue { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gun RNG</h1>
+      <div class="subtitle">Generate a random weapon loadout for your next run.</div>
+
+      <div class="controls">
+        <button class="primary" id="generateBtn">Generate Weapon</button>
+        <button class="secondary" id="rerollBtn">Reroll Stats</button>
+      </div>
+
+      <div class="weapon-card">
+        <div class="header">
+          <h2 class="name" id="weaponName">Loading...</h2>
+          <span class="rarity common" id="weaponRarity">Common</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Damage</div>
+            <div class="value blue" id="damage">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Fire Rate</div>
+            <div class="value" id="fireRate">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Magazine</div>
+            <div class="value" id="magazine">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Accuracy</div>
+            <div class="value green" id="accuracy">0%</div>
+          </div>
+          <div class="stat">
+            <div class="label">Crit Chance</div>
+            <div class="value" id="critChance">0%</div>
+          </div>
+          <div class="stat">
+            <div class="label">Recoil</div>
+            <div class="value red" id="recoil">0</div>
+          </div>
+        </div>
+
+        <div class="footer" id="specialText">
+          A common weapon with no special effect.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const weaponTypes = [
+        'Ravager', 'Viper', 'Mercury', 'Frostbite', 'Ashfall', 'Nova',
+        'Dread', 'Iron Fang', 'Sky Breaker', 'Nightwatch', 'Horizon', 'Rupture',
+        'Calamity', 'Inferno', 'Echo', 'Gale', 'Titan', 'Widow', 'Cinder', 'Mantis'
+      ];
+
+      const rarities = [
+        { name: 'Common', weight: 45, className: 'common' },
+        { name: 'Uncommon', weight: 26, className: 'uncommon' },
+        { name: 'Rare', weight: 17, className: 'rare' },
+        { name: 'Epic', weight: 9, className: 'epic' },
+        { name: 'Legendary', weight: 3, className: 'legendary' }
+      ];
+
+      const specials = [
+        'Explosive rounds that burst on impact.',
+        'High-velocity bullets with extra punch.',
+        'Silent firing and precise aim.',
+        'Adds a chance to ignite enemies.',
+        'Heavy recoil, huge impact.',
+        'Critical hits deal bonus damage.',
+        'Shots pierce through targets.',
+        'A weapon with unstable but powerful energy.',
+        'Built for high precision under pressure.',
+        'Chance to chain lightning on hit.'
+      ];
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function weightedRarity() {
+        const total = rarities.reduce((sum, r) => sum + r.weight, 0);
+        let roll = Math.random() * total;
+
+        for (const rarity of rarities) {
+          roll -= rarity.weight;
+          if (roll <= 0) return rarity;
+        }
+
+        return rarities[0];
+      }
+
+      function generateWeapon() {
+        const rarity = weightedRarity();
+        const type = weaponTypes[randomInt(0, weaponTypes.length - 1)];
+        const damage = randomInt(
+          rarity.name === 'Common' ? 12 : rarity.name === 'Uncommon' ? 18 : rarity.name === 'Rare' ? 25 : rarity.name === 'Epic' ? 35 : 48,
+          rarity.name === 'Common' ? 28 : rarity.name === 'Uncommon' ? 36 : rarity.name === 'Rare' ? 48 : rarity.name === 'Epic' ? 62 : 90
+        );
+
+        const fireRate = randomInt(
+          rarity.name === 'Common' ? 3 : rarity.name === 'Uncommon' ? 4 : rarity.name === 'Rare' ? 5 : rarity.name === 'Epic' ? 6 : 7,
+          rarity.name === 'Common' ? 8 : rarity.name === 'Uncommon' ? 10 : rarity.name === 'Rare' ? 12 : rarity.name === 'Epic' ? 14 : 18
+        );
+
+        const magazine = randomInt(
+          rarity.name === 'Common' ? 8 : rarity.name === 'Uncommon' ? 12 : rarity.name === 'Rare' ? 16 : rarity.name === 'Epic' ? 20 : 24,
+          rarity.name === 'Common' ? 18 : rarity.name === 'Uncommon' ? 24 : rarity.name === 'Rare' ? 30 : rarity.name === 'Epic' ? 36 : 42
+        );
+
+        const accuracy = randomInt(
+          rarity.name === 'Common' ? 45 : rarity.name === 'Uncommon' ? 55 : rarity.name === 'Rare' ? 65 : rarity.name === 'Epic' ? 75 : 84,
+          rarity.name === 'Common' ? 72 : rarity.name === 'Uncommon' ? 80 : rarity.name === 'Rare' ? 88 : rarity.name === 'Epic' ? 94 : 99
+        );
+
+        const critChance = randomInt(
+          rarity.name === 'Common' ? 4 : rarity.name === 'Uncommon' ? 7 : rarity.name === 'Rare' ? 11 : rarity.name === 'Epic' ? 16 : 24,
+          rarity.name === 'Common' ? 12 : rarity.name === 'Uncommon' ? 18 : rarity.name === 'Rare' ? 24 : rarity.name === 'Epic' ? 30 : 40
+        );
+
+        const recoil = randomInt(
+          rarity.name === 'Common' ? 1 : rarity.name === 'Uncommon' ? 2 : rarity.name === 'Rare' ? 3 : rarity.name === 'Epic' ? 4 : 5,
+          rarity.name === 'Common' ? 5 : rarity.name === 'Uncommon' ? 7 : rarity.name === 'Rare' ? 9 : rarity.name === 'Epic' ? 12 : 16
+        );
+
+        const finalName = `${type} ${rarity.name === 'Legendary' ? 'Prime' : rarity.name === 'Epic' ? 'Elite' : rarity.name === 'Rare' ? 'Mark' : rarity.name === 'Uncommon' ? 'II' : ''}`.trim();
+        const special = specials[randomInt(0, specials.length - 1)];
+
+        document.getElementById('weaponName').textContent = finalName;
+        document.getElementById('weaponRarity').textContent = rarity.name;
+        document.getElementById('weaponRarity').className = `rarity ${rarity.className}`;
+
+        document.getElementById('damage').textContent = `${damage}`;
+        document.getElementById('fireRate').textContent = `${fireRate}/s`;
+        document.getElementById('magazine').textContent = `${magazine}`;
+        document.getElementById('accuracy').textContent = `${accuracy}%`;
+        document.getElementById('critChance').textContent = `${critChance}%`;
+        document.getElementById('recoil').textContent = `${recoil}`;
+        document.getElementById('specialText').textContent = special;
+      }
+
+      document.getElementById('generateBtn').addEventListener('click', generateWeapon);
+      document.getElementById('rerollBtn').addEventListener('click', generateWeapon);
+
+      generateWeapon();
+    </script>
+  </body>
+</html>
